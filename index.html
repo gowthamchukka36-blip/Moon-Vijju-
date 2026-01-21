@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vijju | My Moon</title>
+    <title>Happy Birthday Vijju | My Moon</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Montserrat:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:ital,wght@0,700;1,700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --purple-dark: #1a1635;
-            --purple-light: #2d2654;
-            --moon-silver: #e0e0e0;
-            --podium-silver: #b0b0b0;
+            --night-bg: #030305;
+            --moon-glow: #ffffff;
+            --accent-pink: #ffb7c5;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: radial-gradient(circle at center, var(--purple-light) 0%, var(--purple-dark) 100%);
+            background-color: var(--night-bg);
             color: white;
             font-family: 'Montserrat', sans-serif;
-            height: 100vh;
             overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Night Sky Canvas */
+        #star-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 30%, #1a1a2e 0%, #030305 100%);
         }
 
         /* Password Overlay */
@@ -43,102 +50,79 @@
             border: none;
             border-bottom: 2px solid white;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             text-align: center;
             outline: none;
-            letter-spacing: 5px;
-            width: 250px;
-            margin-top: 20px;
-        }
-
-        /* Background Heart Particles */
-        #heart-bg {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        /* Hero Section */
-        .hero {
-            position: relative;
-            z-index: 1;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 10%;
-            visibility: hidden; /* Hidden until password correct */
-        }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-text h1 {
-            font-size: 4rem;
             font-family: 'Cinzel', serif;
-            line-height: 1.1;
+            letter-spacing: 8px;
+            width: 300px;
+            margin-top: 30px;
+            padding-bottom: 5px;
         }
 
-        .hero-text span {
-            font-family: 'Dancing Script', cursive;
-            display: block;
-            font-size: 3rem;
-            margin-top: 10px;
-        }
-
-        .subtext {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-
-        /* 3D Visual Area */
-        .visual-container {
-            flex: 1;
+        /* Main Hero Layout */
+        .hero {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
+            height: 100vh;
+            text-align: center;
+            visibility: hidden; /* Shown after password */
+            padding-top: 20px;
         }
 
-        /* The Moon */
-        .moon-3d {
-            width: 250px;
-            height: 250px;
-            background: linear-gradient(135deg, #f0f0f0 0%, #a0a0a0 100%);
+        /* The Moon - Pure White Glow per Image 2 */
+        .moon-main {
+            width: 280px;
+            height: 280px;
+            background: var(--moon-glow);
             border-radius: 50%;
-            box-shadow: -20px -20px 50px rgba(0,0,0,0.5) inset, 
-                        0 0 50px rgba(255,255,255,0.2);
+            box-shadow: 0 0 100px rgba(255, 255, 255, 0.4), 
+                        0 0 40px rgba(255, 255, 255, 0.2);
+            margin-bottom: 50px;
             position: relative;
-            transform: rotate(-20deg);
         }
 
-        .star-overlay {
-            position: absolute;
-            top: 20%;
-            right: 10%;
-            font-size: 3rem;
-            filter: drop-shadow(0 0 10px white);
+        /* Typography matching Image 2 */
+        .title-group h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3.8rem;
+            letter-spacing: 6px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
-        /* The Podium */
-        .podium {
-            width: 350px;
-            height: 80px;
-            background: linear-gradient(to bottom, #dcdcdc, #808080);
-            border-radius: 50% / 30px;
-            margin-top: -40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            position: relative;
-            z-index: -1;
+        .vijju-name {
+            font-family: 'Cinzel', serif;
+            font-size: 4.5rem;
+            letter-spacing: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
 
-        /* Cracker Animation Box */
+        .emoji-heart {
+            font-size: 3.5rem;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+        }
+
+        .sub-quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.2rem;
+            color: #f7cbd4; /* Soft pinkish hue from reference */
+            margin-top: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* Animation Styles */
         #cracker-box {
             position: fixed;
             inset: 0;
@@ -150,105 +134,98 @@
 </head>
 <body>
 
+<canvas id="star-canvas"></canvas>
+<div id="cracker-box"></div>
+
 <div id="login-overlay">
-    <h2 style="font-family: 'Cinzel'; letter-spacing: 2px;">AUTHENTICATION</h2>
-    <input type="password" id="passCode" class="pass-input" placeholder="DD-MM-YYYY">
+    <h2 style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 1rem; opacity: 0.7;">ENTER PASSCODE</h2>
+    <input type="password" id="passCode" class="pass-input" placeholder="DD-MM-YYYY" maxlength="10">
 </div>
 
-<div id="cracker-box"></div>
-<canvas id="heart-bg"></canvas>
+<main class="hero" id="hero-scene">
+    <div class="moon-main" id="glowMoon"></div>
 
-<main class="hero" id="hero-section">
-    <div class="hero-text">
-        <h1 id="main-title">Happy<br>Bir thday</h1>
-        <span id="vijju-name">vijjuluuuuu 🎀 🤍</span>
-        <p class="subtext">You are my moon in every dark night (✨)🌙✨</p>
-    </div>
-
-    <div class="visual-container">
-        <div class="moon-3d" id="moon">
-            <div class="star-overlay">⭐</div>
+    <div class="title-group">
+        <h1>Happy Birthday</h1>
+        <div class="vijju-name">
+            VIJJULUUUUU 🎀
         </div>
-        <div class="podium"></div>
+        <div class="emoji-heart">🤍</div>
+        
+        <p class="sub-quote">
+            You are my moon in every dark night 🙂 🌙✨
+        </p>
     </div>
 </main>
 
 <script>
     const PASSWORD = "17-08-2026";
-    const loginOverlay = document.getElementById('login-overlay');
-    const hero = document.getElementById('hero-section');
     const passInput = document.getElementById('passCode');
+    const hero = document.getElementById('hero-scene');
 
-    // Password Check
+    // Authentication Logic
     passInput.addEventListener('input', (e) => {
         if(e.target.value === PASSWORD) {
-            gsap.to(loginOverlay, { y: "-100%", duration: 1.2, ease: "power4.inOut", onComplete: () => {
-                loginOverlay.style.display = 'none';
-                startCinematicHero();
-            }});
+            gsap.to("#login-overlay", { 
+                opacity: 0, 
+                duration: 1.5, 
+                onComplete: () => {
+                    document.getElementById('login-overlay').style.display = 'none';
+                    revealHome();
+                }
+            });
         } else if(e.target.value.length >= 10) {
-            triggerWrong();
+            triggerFail();
         }
     });
 
-    function triggerWrong() {
+    function triggerFail() {
         document.getElementById('cracker-box').style.display = 'block';
         confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         setTimeout(() => location.reload(), 3000);
     }
 
-    function startCinematicHero() {
+    function revealHome() {
         hero.style.visibility = 'visible';
         
-        // Text Animation
-        gsap.from("#main-title", { x: -100, opacity: 0, duration: 1.5, ease: "power4.out" });
-        gsap.from("#vijju-name", { x: -50, opacity: 0, duration: 1.5, delay: 0.5, ease: "power4.out" });
-        gsap.from(".subtext", { opacity: 0, duration: 2, delay: 1 });
-
-        // Moon Floating Animation
-        gsap.to("#moon", {
-            y: -20,
-            duration: 3,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
+        // Premium Entrance Animation
+        gsap.from("#glowMoon", { scale: 0, opacity: 0, duration: 2, ease: "elastic.out(1, 0.7)" });
+        gsap.from(".title-group h1", { y: 50, opacity: 0, duration: 1.5, delay: 0.5 });
+        gsap.from(".vijju-name", { y: 50, opacity: 0, duration: 1.5, delay: 0.8 });
+        gsap.from(".emoji-heart", { scale: 0, duration: 1, delay: 1.2, ease: "back.out(2)" });
+        gsap.from(".sub-quote", { opacity: 0, y: 30, duration: 2, delay: 1.5 });
     }
 
-    // Floating Hearts Canvas
-    const canvas = document.getElementById('heart-bg');
+    // Star Sky Generator
+    const canvas = document.getElementById('star-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const hearts = [];
-    function createHeart() {
-        return {
+    const stars = [];
+    for(let i=0; i<200; i++) {
+        stars.push({
             x: Math.random() * canvas.width,
-            y: canvas.height + 100,
-            size: Math.random() * 20 + 10,
-            speed: Math.random() * 2 + 1,
-            opacity: Math.random() * 0.5
-        };
-    }
-
-    for(let i=0; i<20; i++) hearts.push(createHeart());
-
-    function draw() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "rgba(255, 182, 197, 0.3)";
-        hearts.forEach(h => {
-            ctx.globalAlpha = h.opacity;
-            ctx.beginPath();
-            ctx.arc(h.x, h.y, h.size, 0, Math.PI * 2);
-            ctx.fill();
-            h.y -= h.speed;
-            if(h.y < -50) h.y = canvas.height + 50;
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2,
+            opacity: Math.random(),
+            speed: Math.random() * 0.02
         });
-        requestAnimationFrame(draw);
     }
-    draw();
+
+    function animateStars() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        stars.forEach(s => {
+            ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+            ctx.fill();
+            s.opacity += s.speed;
+            if(s.opacity > 1 || s.opacity < 0) s.speed = -s.speed;
+        });
+        requestAnimationFrame(animateStars);
+    }
+    animateStars();
 </script>
 </body>
 </html>
-
