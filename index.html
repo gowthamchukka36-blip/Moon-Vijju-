@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Vijju | My Moon</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #020408;
+            --moon-glow: #fffdf2;
+            --premium-cream: #f8f1e5;
+            --accent-pink: #ffb7c5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--premium-cream);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Night Sky Background */
+        #star-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #020408 100%);
+        }
+
+        /* Password Overlay */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pass-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--premium-cream);
+            color: var(--premium-cream);
+            font-size: 1.5rem;
+            text-align: center;
+            outline: none;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 5px;
+            width: 250px;
+            margin-top: 20px;
+        }
+
+        /* Scene 1: Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0; /* Animated later */
+        }
+
+        .moon {
+            width: 180px;
+            height: 180px;
+            background: var(--moon-glow);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 253, 242, 0.4), inset -15px -15px 40px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; letter-spacing: 2px; }
+        .subtext { font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: var(--accent-pink); margin-top: 15px; }
+
+        /* Cracker Animation Box */
+        #cracker-box {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: none;
+            background: rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="star-canvas"></canvas>
+<div id="cracker-box"></div>
+
+<div id="login-overlay">
+    <h2 style="font-family: 'Cinzel';">Enter Password</h2>
+    <input type="password" id="passCode" class="pass-input" placeholder="DD-MM-YYYY">
+</div>
+
+<main id="main-content">
+    <section id="hero">
+        <div class="moon" id="mainMoon"></div>
+        <h1>Happy Birthday Vijjuluuuuu 🎀 🤍</h1>
+        <p class="subtext">You are my moon in every dark night 🙂🌙✨</p>
+    </section>
+</main>
+
+<script>
+    // 1. Star Background Logic
+    const canvas = document.getElementById('star-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const stars = [];
+    for(let i=0; i<150; i++) {
+        stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5, o: Math.random() });
+    }
+    function drawStars() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "white";
+        stars.forEach(s => {
+            ctx.globalAlpha = s.o;
+            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+        });
+        requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // 2. Password & Cracker Logic
+    const passInput = document.getElementById('passCode');
+    passInput.addEventListener('input', (e) => {
+        if(e.target.value === "17-08-2026") {
+            gsap.to("#login-overlay", { opacity: 0, duration: 1, onComplete: () => {
+                document.getElementById('login-overlay').style.display = 'none';
+                startHero();
+            }});
+        } else if(e.target.value.length >= 10) {
+            triggerCracker();
+        }
+    });
+
+    function triggerCracker() {
+        document.getElementById('cracker-box').style.display = 'block';
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        setTimeout(() => location.reload(), 3000);
+    }
+
+    // 3. Hero Animations
+    function startHero() {
+        gsap.to("#hero", { opacity: 1, duration: 2 });
+        gsap.to("#mainMoon", { rotation: 360, duration: 40, repeat: -1, ease: "none" });
+    }
+</script>
+</body>
+</html>
